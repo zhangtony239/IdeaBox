@@ -14,40 +14,6 @@ We do not build tools for public surveillance or speech suppression. By design, 
 
 The infrastructure itself is immune to administrative abuse: by leveraging Trusted Execution Environments (TEEs), any attempt by a system administrator or government actor to bypass the policy, tamper with the runtime, or weaponize the system is blocked by the policy-enforcement program itself, which is fully encapsulated within a TEE enclave to guarantee its execution cannot be tampered with or interfered with by any entity, leaving an unalterable, hardware-signed cryptographic proof of abuse.
 
-## 🏛️ Core Design Philosophies
-
-### 1. Hardware-Enforced Deterministic Auditing
-
-Instead of relying on post-incident software logs (which are highly mutable and prone to administrative manipulation by root users), OpenTrust designs systems where critical execution states must run inside Trusted Execution Environments (TEEs).
-
-Let $M$ be the cryptographic measurement (hash of the code and initial state) of the audit enclave, and let $\sigma_{TEE}$ be the hardware-generated signature of the attestation report.
-
-$$\text{Verify}(M, \sigma_{TEE}) = 1$$
-
-Only when the remote attestation verification succeeds can the system be trusted to execute. If the underlying OS or a privileged administrator attempts to tamper with the runtime memory, the hardware enclave immediately invalidates its state, terminating execution and refusing to sign any state transitions.
-
-### 2. Anti-Corruption Internal Loop Alignment (Anti-Abuse by Design)
-
-Traditional regulatory tools focus downwards on public expression and private enterprises. OpenTrust focuses upwards and inwards on public-resource allocators, fiscal channels, and administrative execution.
-
-Internal Loop Focused: Out-of-the-box templates focus entirely on public asset tracing, sovereign fund distribution, and administrative decision-making workflows.
-
-No Speech/Social Monitoring Modules: By architectural design, our reference implementations lack the technical conduits or APIs required to analyze public semantic content or personal communication.
-
-### 3. The Mirror-Trap Principle
-
-In traditional systems, an administrator with root access can query sensitive data and subsequently erase the database audit logs to hide their tracks. OpenTrust eliminates this loophole by forcing all administrative actions through a secure TEE enclave.
-
-No-Root Bypass: Because the host operating system cannot inspect or alter the memory of the enclave, the root administrator cannot bypass the logging logic.
-
-Hardware-Signed Proof of Access: Any administrative query $q$ is processed inside the enclave, which automatically signs the action using an enclave-held private key $K_{enclave}$ (which is bound to the hardware and cannot be extracted).
-
-The Trap: The enclave will only release the decrypted query result to the administrator after it has successfully outputted and broadcasted the signed access record:
-
-$$\text{Log} = \text{Sign}_{K_{enclave}}(q \mathbin{\Vert} \text{Timestamp} \mathbin{\Vert} \text{ActorIdentity})$$
-
-The administrator cannot access the data without permanently and indelibly branding their own record. The oppressor cannot oppress without leaving a globally verifiable cryptographic proof.
-
 ## 📈 Roadmap & Evolution Plan
 
 This repository currently serves as the Strategic Manifesto and Temporary Whitepaper Storage. As the framework matures, OpenTrust will transition to:
